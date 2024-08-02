@@ -31,22 +31,24 @@ module.exports = (env, argv, config) => {
     } = config;
 
     const isLib = env.lib === 'umd';
+    const outputPath = isLib ? getFullUrl('./dist/umd') : getFullUrl('./dist/build');
 
     const entryAndOutput = isLib
         ? {
             entry: getFullUrl('src/umd.ts'),
             output: {
-                path: getFullUrl('./dist/umd'),
+                path: outputPath,
                 libraryTarget: 'umd',
                 library: umdLibrary,
                 filename: `${umdFilename}.js`,
+                chunkFilename: 'chunks/[name].[contenthash:8].js',
             },
             externals: umdExternals,
         }
         : {
             entry: getFullUrl('src/main.ts'),
             output: {
-                path: getFullUrl('./dist/build'),
+                path: outputPath,
                 filename: setFileLocation('[name].[contenthash].js'),
                 chunkFilename: setFileLocation('[name].[contenthash].chunk.js'),
                 publicPath,
@@ -94,7 +96,7 @@ module.exports = (env, argv, config) => {
         // TODO: browserslist 会影响到热更新
         target: isDev ? 'web' : 'browserslist',
         // https://mp.weixin.qq.com/s/-y35QBSIx2jMvG5dNklcPQ
-        devtool: isDev ? 'eval-source-map' : 'nosources-source-map',
+        devtool: isDev ? 'eval-source-map' : false,
         // 缓存
         cache: {
             type: 'filesystem',
@@ -136,7 +138,7 @@ module.exports = (env, argv, config) => {
                         //     options: {}
                         // },
                         // 为了热更新有效 开发使用 style-loader
-                        isDev ? 'style-loader' : MiniCssExtractPlugin.loader,
+                        (isDev || isLib) ? 'style-loader' : MiniCssExtractPlugin.loader,
                         {
                             loader: 'css-loader',
                             options: {
@@ -265,7 +267,7 @@ module.exports = (env, argv, config) => {
                 patterns: [
                     {
                         from: getFullUrl('public'),
-                        to: getFullUrl('dist'),
+                        to: outputPath,
                         noErrorOnMissing: true,
                         globOptions: {
                             ignore: [

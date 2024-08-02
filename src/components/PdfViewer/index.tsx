@@ -190,7 +190,7 @@ function Preview(props: IPreviewProps) {
     }, [rotate]);
 
     return (
-        <div className={styles.container} style={{width: width || '100%'}}>
+        <div className={styles.container} style={{width: width || '100%', height: height || document.body.offsetHeight - 45 + 'px'}}>
             <div className={styles.loadingPage} style={{display: showLoading ? 'block' : 'none'}}>
                 <div className={styles.loading}><img src={img} /></div>
             </div>
@@ -218,7 +218,7 @@ function Preview(props: IPreviewProps) {
                         <em>无效或损坏的文件。详细信息： {errorInfo}</em>
                         <button onClick={() => onShowError(false, '')}>关闭</button>
                     </div>
-                    <div className={styles.viewerContainer} ref={containerRef} style={{height: height || document.body.offsetHeight - 30 + 'px'}}>
+                    <div className={styles.viewerContainer} ref={containerRef}>
                         {pdfDocument &&
                             <article className={styles.page} ref={pageWrapperRef}>
                                 <div className={styles.canvasWrapper}>

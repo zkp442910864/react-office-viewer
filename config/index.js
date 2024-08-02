@@ -46,7 +46,7 @@ const config = {
     /**
      * umd打包，挂载全局时候的 属性名
      */
-    umdLibrary: 'xLib',
+    umdLibrary: 'ReactUtilLib',
     /**
      * umd打包，输出的文件名
      */

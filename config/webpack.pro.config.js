@@ -43,10 +43,13 @@ module.exports = (env, argv, config) => {
             // https://blog.csdn.net/lin_fightin/article/details/115586812
             usedExports: true,
             minimizer: [
-                '...',
+                // '...',
                 // webpack5 有默认丑化压缩
                 // https://webpack.docschina.org/plugins/terser-webpack-plugin/
                 // new TerserPlugin(),
+                new TerserPlugin({
+                    extractComments: false, // 设置为 false 禁止生成 LICENSE.txt
+                }),
                 // 这个不知道为啥会提示错误
                 // new OptimizeCssAssetsWebpackPlugin(),
                 new CssMinimizerWebpackPlugin(),

@@ -97,14 +97,15 @@ export default function XlsxViewer(props: {file: any; fileName?: string; width?:
     }, [file]);
 
     return (
-        <div className={styles['wbSheets_wrapper']} id='wbSheets_wrapper_id' style={{width: width || '100%', overflow: 'hidden'}}>
+        <div className={styles['wbSheets_wrapper']} id='wbSheets_wrapper_id' style={{width: width || '100%', height: height || document.body.offsetHeight - 45 + 'px', overflow: 'hidden'}}>
             <Loading showLoading={showLoading} />
             <ErrorLine errorInfo={errorInfo} showError={showError} onShowError={onShowError} />
             <TitleWithDownload disabled={!fileArrayBuffer} fileName={fileName} handleDownload={handleDownload} />
             <HotTable
                 colHeaders={true}
                 data={data[activeTabKey] || []}
-                height={height || document.body.offsetHeight - 45 + 'px'}
+                height={`calc(${height} - 25px - 38px)`}
+                // height={height || document.body.offsetHeight - 45 + 'px'}
                 licenseKey="non-commercial-and-evaluation"
                 readOnly={true}
                 rowHeaders={true}
@@ -120,6 +121,7 @@ export default function XlsxViewer(props: {file: any; fileName?: string; width?:
                     autoRowSize: true,
                     autoColumnSize: true,
                 }}
+                style={{flex: 1}}
                 title={fileName}
                 width="100%"
             />

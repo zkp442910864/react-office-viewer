@@ -24,22 +24,22 @@ const Viewer: FC<IViewerProps> = ({
         const textFileSource = getFileTypeFromUploadType(type);
 
         if (mediaSource) {
-            Com.current = (await import('../ImageOrAudioOrVideoViewer')).default;
+            Com.current = (await import(/* webpackChunkName: "ImageOrAudioOrVideoViewer" */'../ImageOrAudioOrVideoViewer')).default;
         }
         else if (textFileSource === 'pdf') {
-            Com.current = (await import('../PdfViewer')).default;
+            Com.current = (await import(/* webpackChunkName: "PdfViewer" */'../PdfViewer')).default;
         }
         else if (['xls', 'xlsx'].includes(textFileSource)) {
-            Com.current = (await import('../SheetViewer')).default;
+            Com.current = (await import(/* webpackChunkName: "SheetViewer" */'../SheetViewer')).default;
         }
         else if (textFileSource === 'docx') {
-            Com.current = (await import('../DocxViewer')).default;
+            Com.current = (await import(/* webpackChunkName: "DocxViewer" */'../DocxViewer')).default;
         }
         else if (['ppt', 'pptx'].includes(textFileSource)) {
-            Com.current = (await import('../PptViewer')).default;
+            Com.current = (await import(/* webpackChunkName: "PptViewer" */'../PptViewer')).default;
         }
         else if (type === '' || ['json', ''].includes(textFileSource)) {
-            Com.current = (await import('../TxtViewer')).default;
+            Com.current = (await import(/* webpackChunkName: "TxtViewer" */'../TxtViewer')).default;
         }
         else {
             Com.current = () => <>目前还不支持该文件类型: {textFileSource}, type: {type}, name: {name}</>;

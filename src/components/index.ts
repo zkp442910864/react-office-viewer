@@ -1,1 +1,1 @@
-export const a = 1;
+export {viewerFn, default as Viewer} from './Viewer';
