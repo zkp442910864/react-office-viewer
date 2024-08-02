@@ -10,6 +10,7 @@ const TerserPlugin = require('terser-webpack-plugin');
 
 // css 树摇
 const PurgeCSSPlugin = require('purgecss-webpack-plugin');
+const {BannerPlugin} = require('webpack');
 
 module.exports = (env, argv, config) => {
     const {
@@ -38,6 +39,15 @@ module.exports = (env, argv, config) => {
             // new PurgeCSSPlugin({
             //     paths: globAll.sync(getFullUrl('src/**/*'), {nodir: true}),
             // }),
+            new BannerPlugin({
+                banner: `
+                  /**
+                    * Project Home:
+                    *   https://github.com/zkp442910864/react-utils
+                    */
+                `,
+                raw: true, // 直接输出，不做任何转换
+            }),
         ],
         optimization: {
             // https://blog.csdn.net/lin_fightin/article/details/115586812

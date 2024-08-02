@@ -50,7 +50,7 @@ const config = {
     /**
      * umd打包，输出的文件名
      */
-    umdFilename: 'index',
+    umdFilename: 'ReactUtilLib',
 };
 
 module.exports = (env, argv) => {

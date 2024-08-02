@@ -21,9 +21,7 @@
     "copy:types": "copyfiles -u 1 src/types/**/* types/",
     "jest": "jest --passWithNoTests"
   },
-  "main": "dist/index.js",
-  "module": "es/tsc.js",
-  "types": "types/tsc.d.ts",
+  "main": "dist/umd/index.js",
   "peerDependencies": {
     "react": ">=16.0.0 || >=17.0.0 || >=18.0.0",
     "react-dom": ">=16.0.0 || >=17.0.0 || >=18.0.0"
