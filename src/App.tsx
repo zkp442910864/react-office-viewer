@@ -4,7 +4,7 @@ import {createRoot} from 'react-dom/client';
 import Component from './views';
 
 export default () => {
-    console.time('入口耗时');
+    // console.time('入口耗时');
 
     // 主入口
     const Main = () => {
@@ -17,6 +17,6 @@ export default () => {
 
     const root = createRoot(document.getElementById('root')!);
     root.render(<Main />);
-    console.timeEnd('入口耗时');
+    // console.timeEnd('入口耗时');
 };
 

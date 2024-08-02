@@ -8,6 +8,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
+const path = require('path');
 
 module.exports = (env, argv, config) => {
     const {
@@ -118,7 +119,7 @@ module.exports = (env, argv, config) => {
             rules: [
                 // ts
                 {
-                    test: /\.(tsx|ts)$/,
+                    test: /\.(tsx|ts|jsx|js)$/,
                     include,
                     exclude,
                     use: [
@@ -141,6 +142,22 @@ module.exports = (env, argv, config) => {
                             options: {
                                 sourceMap,
                                 // modules: true,
+                                modules: {
+                                    // localIdentName: '[local]-[hash:base64:8]',
+                                    getLocalIdent: (context, localIdentName, localName, options) => {
+                                        const fileName = path.basename(context.resourcePath).replace(/\.[^/.]+$/, ''); // get the file name without extension
+                                        const filePath = path.relative(context.rootContext, context.resourcePath).replace(/\\/g, '/'); // get the relative path
+
+                                        if (fileName === 'handsontable.full') {
+                                            // "handsontable.full"
+                                            // "node_modules/.pnpm/handsontable@14.5.0/node_modules/handsontable/dist/handsontable.full.css"
+                                            return localName;
+                                        }
+
+                                        // Generate a custom class name
+                                        return `${localName}__${Buffer.from(filePath).toString('base64').slice(0, 5)}`;
+                                    },
+                                },
                             },
                         },
                         {
@@ -281,9 +298,13 @@ module.exports = (env, argv, config) => {
         ],
         optimization,
         resolve: {
-            extensions: ['.tsx', '.ts', '.js', '.json'],
+            extensions: ['.tsx', '.jsx', '.ts', '.js', '.json'],
             alias: {
                 '@': getFullUrl('src'),
+            },
+            fallback: {
+                util: require.resolve('util/'),
+                // 其他需要的 Node.js 模块
             },
         },
     };
