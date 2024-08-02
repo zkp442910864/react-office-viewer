@@ -7,10 +7,10 @@ const {WebpackManifestPlugin} = require('webpack-manifest-plugin');
 const CompressionWebpackPlugin = require('compression-webpack-plugin');
 const CssMinimizerWebpackPlugin = require('css-minimizer-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
+const webpack = require('webpack');
 
 // css 树摇
 const PurgeCSSPlugin = require('purgecss-webpack-plugin');
-const {BannerPlugin} = require('webpack');
 
 module.exports = (env, argv, config) => {
     const {
@@ -39,14 +39,15 @@ module.exports = (env, argv, config) => {
             // new PurgeCSSPlugin({
             //     paths: globAll.sync(getFullUrl('src/**/*'), {nodir: true}),
             // }),
-            new BannerPlugin({
+            new webpack.BannerPlugin({
                 banner: `
-                  /**
-                    * Project Home:
-                    *   https://github.com/zkp442910864/react-utils
-                    */
+                    ReactUtilLib
+                    (c) ${new Date().getFullYear()} zkp
+                    Project Home:
+                        https://github.com/hizzgdev/jsmind/
+                    Released under the MIT License.
                 `,
-                raw: true, // 直接输出，不做任何转换
+                // raw: true, // 直接输出，不做任何转换
             }),
         ],
         optimization: {
