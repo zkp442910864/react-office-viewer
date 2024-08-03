@@ -3,6 +3,7 @@ import {createRoot} from 'react-dom/client';
 
 import styles from './index.module.less';
 import {getFileTypeFromUploadType, isMediaSource} from '../../utils/utils';
+import FullScreen from '../FullScreen';
 
 const Viewer: FC<IViewerProps> = ({
     fileSource,
@@ -78,26 +79,28 @@ const Viewer: FC<IViewerProps> = ({
 
 
     return (
-        <div className={state.loading ? styles['loading'] : ''} style={{width: width || '100%', height: height || document.body.offsetHeight - 45 + 'px'}}>
-            {/* <DocxViewer file={state.file} height="500px" />
-            <XlsxViewer file={state.file} height="500px" />
-            <PdfViewer file={state.file} height="500px" />
-            <PptViewer file={state.file} height="500px" />
-            <TxtViewer file={state.file} height="500px" />
-            <ImageOrAudioOrVideoViewer file={state.file} height="500px" /> */}
-            {
-                Com.current
-                    ? (
-                        <Com.current
-                            file={state.file}
-                            fileName={fileName}
-                            height={height}
-                            width={width}
-                        />
-                    )
-                    : ''
-            }
-        </div>
+        <FullScreen>
+            <div className={state.loading ? styles['loading'] : ''} style={{width: width || '100%', height: height || document.body.offsetHeight - 45 + 'px'}}>
+                {/* <DocxViewer file={state.file} height="500px" />
+                        <XlsxViewer file={state.file} height="500px" />
+                        <PdfViewer file={state.file} height="500px" />
+                        <PptViewer file={state.file} height="500px" />
+                        <TxtViewer file={state.file} height="500px" />
+                        <ImageOrAudioOrVideoViewer file={state.file} height="500px" /> */}
+                {
+                    Com.current
+                        ? (
+                            <Com.current
+                                file={state.file}
+                                fileName={fileName}
+                                height={height}
+                                width={width}
+                            />
+                        )
+                        : ''
+                }
+            </div>
+        </FullScreen>
     );
 };
 

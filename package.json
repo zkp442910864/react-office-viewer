@@ -34,6 +34,7 @@
     "pdfjs-dist": "^4.5.136",
     "react": "18.3.1",
     "react-dom": "18.3.1",
+    "react-zoom-pan-pinch": "^3.6.1",
     "util": "^0.12.5",
     "xlsx": "^0.18.5"
   },

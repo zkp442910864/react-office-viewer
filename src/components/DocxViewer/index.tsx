@@ -5,8 +5,8 @@ import {Loading, TitleWithDownload, ErrorLine} from '../pageComps';
 import {getFileTypeFromUploadType, _getBlobUrlFromBuffer, _download} from '../../utils/utils';
 import styles from './style.module.less';
 
-export default function DocxViewer(props: {file?: File | null; fileName?: string; width?: string; height?: string;}) {
-    const {file, fileName: outFileName, width, height} = props;
+export default function DocxViewer(props: {file?: File | null; fileName?: string;}) {
+    const {file, fileName: outFileName} = props;
     const [docHtmlStr, setDocHtmlStr] = useState('');
     const [fileName, setFileName] = useState('');
     const [showError, setShowError] = useState(false);
@@ -91,7 +91,7 @@ export default function DocxViewer(props: {file?: File | null; fileName?: string
         }
     }, [file]);
     return (
-        <div className={styles['pg-viewer-wrapper']} style={{width: width || '100%', height: height || document.body.offsetHeight - 45 + 'px'}}>
+        <div className={styles['pg-viewer-wrapper']}>
             <Loading showLoading={showLoading} />
             <ErrorLine errorInfo={errorInfo} showError={showError} onShowError={onShowError} />
             <TitleWithDownload
@@ -107,7 +107,7 @@ export default function DocxViewer(props: {file?: File | null; fileName?: string
                 dangerouslySetInnerHTML={{__html: docHtmlStr}}
                 style={{
                     width: scale * 100 + '%',
-                    height: '85%',
+                    height: 'calc(100% - 25px)',
                     overflow: 'auto',
                     boxSizing: 'border-box',
                 }}

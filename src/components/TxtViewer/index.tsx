@@ -5,8 +5,6 @@ import styles from './index.module.less';
 
 const TxtViewer: FC<ITxtViewerProps> = ({
     file,
-    height,
-    width,
     fileName,
 }) => {
 
@@ -38,7 +36,7 @@ const TxtViewer: FC<ITxtViewerProps> = ({
     }, [file]);
 
     return (
-        <div className={styles['pg-viewer-wrapper']} style={{width: width || '100%', height: height || document.body.offsetHeight - 45 + 'px'}}>
+        <div className={styles['pg-viewer-wrapper']}>
             <TitleWithDownload
                 backgroundColor="gray"
                 file={file}
@@ -55,6 +53,4 @@ export default TxtViewer;
 interface ITxtViewerProps {
     file?: File | null;
     fileName?: string;
-    width?: string;
-    height?: string;
 }

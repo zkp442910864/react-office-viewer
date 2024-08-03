@@ -1,14 +1,12 @@
 import React, {FC, useEffect, useRef, useState} from 'react';
+import {TransformComponent, TransformWrapper} from 'react-zoom-pan-pinch';
 
 import {_getObjectUrl, isMediaSource} from '../../utils/utils';
-
 import {TitleWithDownload} from '../pageComps';
 import styles from './index.module.less';
 
 const ImageOrAudioOrVideoViewer: FC<IImageOrAudioOrVideoViewerProps> = ({
     file,
-    height,
-    width,
     fileName,
 }) => {
 
@@ -35,7 +33,7 @@ const ImageOrAudioOrVideoViewer: FC<IImageOrAudioOrVideoViewerProps> = ({
     }, [file]);
 
     return (
-        <div className={styles['pg-viewer-wrapper']} style={{width: width || '100%', height: height || document.body.offsetHeight - 45 + 'px'}}>
+        <div className={styles['pg-viewer-wrapper']}>
             <TitleWithDownload
                 backgroundColor="gray"
                 file={file}
@@ -43,20 +41,24 @@ const ImageOrAudioOrVideoViewer: FC<IImageOrAudioOrVideoViewerProps> = ({
                 fileType={file?.type}
             />
             <div className={styles['pg-viewer-content']}>
-                {(() => {
+                <TransformWrapper>
+                    <TransformComponent contentStyle={{width: '100%', height: '100%'}} wrapperStyle={{width: '100%', height: '100%'}}>
+                        {(() => {
 
-                    if (state.type === 'image') {
-                        return <img className={styles['pg-viewer-item']} loading="lazy" src={state.url} />;
-                    }
-                    if (state.type === 'video') {
-                        return <video className={styles['pg-viewer-item']} controls={true} src={state.url} />;
-                    }
-                    if (state.type === 'audio') {
-                        return <audio className={styles['pg-viewer-item']} controls={true} src={state.url} />;
-                    }
+                            if (state.type === 'image') {
+                                return <img className={styles['pg-viewer-item']} loading="lazy" src={state.url} />;
+                            }
+                            if (state.type === 'video') {
+                                return <video className={styles['pg-viewer-item']} controls={true} src={state.url} />;
+                            }
+                            if (state.type === 'audio') {
+                                return <audio className={styles['pg-viewer-item']} controls={true} src={state.url} />;
+                            }
 
-                    // return state.error;
-                })()}
+                            // return state.error;
+                        })()}
+                    </TransformComponent>
+                </TransformWrapper>
             </div>
         </div>
     );
@@ -69,6 +71,4 @@ export default ImageOrAudioOrVideoViewer;
 interface IImageOrAudioOrVideoViewerProps {
     file?: File | null;
     fileName?: string;
-    width?: string;
-    height?: string;
 }

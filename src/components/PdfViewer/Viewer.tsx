@@ -1,6 +1,7 @@
 import {useState, useEffect, useRef, Ref, RefObject} from 'react';
 import * as pdfjs from 'pdfjs-dist';
 import {TextLayerBuilder, EventBus} from 'pdfjs-dist/web/pdf_viewer.mjs';
+import workerSrc from 'pdfjs-dist/build/pdf.worker.min.mjs';
 
 import styles from './viewer.module.less';
 import {_download, _getObjectUrl, _getBlobUrl} from '../../utils/utils';
@@ -65,7 +66,7 @@ export const usePdf = ({
     }, [onPageRenderFail]);
 
     useEffect(() => {
-        (pdfjs as any).workerSrc = require('pdfjs-dist/build/pdf.worker.min.mjs');
+        (pdfjs as any).workerSrc = workerSrc;
     }, []);
 
     useEffect(() => {

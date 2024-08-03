@@ -105,6 +105,14 @@ module.exports = (env, argv, config) => {
             // },
             // version: '1.0'
         },
+        ignoreWarnings: [
+            (warning) => {
+                // 通过返回 true 忽略特定的警告
+                // 例如，根据警告的消息内容
+                if (warning.message?.indexOf('workerSrc') > -1) return true;
+                return false;
+            },
+        ],
         stats: isDev ? 'none' : {
             assets: true,
             assetsSort: '!size',

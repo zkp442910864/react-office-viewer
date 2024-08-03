@@ -7,8 +7,6 @@ import styles from './index.module.less';
 
 const PptViewer: FC<IPptViewerProps> = ({
     file,
-    height,
-    width,
     fileName,
 }) => {
     const iframeRef = useRef<HTMLIFrameElement>(null);
@@ -81,7 +79,7 @@ const PptViewer: FC<IPptViewerProps> = ({
     }, [file]);
 
     return (
-        <div className={styles['pg-viewer-wrapper']} style={{width: width || '100%', height: height || document.body.offsetHeight - 45 + 'px'}}>
+        <div className={styles['pg-viewer-wrapper']}>
             <TitleWithDownload
                 backgroundColor='#F9612E'
                 fileName={fileName}
@@ -89,7 +87,7 @@ const PptViewer: FC<IPptViewerProps> = ({
                 // zoom={true}
                 // onZoom={onZoom}
             />
-            <iframe ref={iframeRef} style={{border: 'none', width: '100%', height: '100%'}} />
+            <iframe ref={iframeRef} style={{border: 'none', width: '100%', height: 'calc(100% - 25px)'}} />
         </div>
     );
 };

@@ -18,8 +18,6 @@ function Preview(props: IPreviewProps) {
     const {
         file: outFile,
         fileName: outFileName,
-        width,
-        height,
     } = props;
     const [file, setFile] = useState<File>();
     const [page, setPage] = useState(1);
@@ -190,7 +188,7 @@ function Preview(props: IPreviewProps) {
     }, [rotate]);
 
     return (
-        <div className={styles.container} style={{width: width || '100%', height: height || document.body.offsetHeight - 45 + 'px'}}>
+        <div className={styles.container}>
             <div className={styles.loadingPage} style={{display: showLoading ? 'block' : 'none'}}>
                 <div className={styles.loading}><img src={img} /></div>
             </div>
@@ -238,6 +236,4 @@ export default Preview;
 interface IPreviewProps {
     file?: File | null;
     fileName?: string;
-    width?: string;
-    height?: string;
 }

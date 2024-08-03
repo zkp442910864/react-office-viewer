@@ -58,7 +58,7 @@ module.exports = (env, argv, config) => {
                     warnings: false,
                 },
                 progress: true,
-                logging: 'error'
+                logging: 'error',
             },
             open: false,
             port,

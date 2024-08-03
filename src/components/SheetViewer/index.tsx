@@ -8,7 +8,7 @@ import {Loading, TitleWithDownload, ErrorLine} from '../pageComps';
 import {_getBlobUrlFromBuffer, _download} from '../../utils/utils';
 
 export default function XlsxViewer(props: {file: any; fileName?: string; width?: string; height?: string; _fileType?: any; timeout?: number;}) {
-    const {file: outFile, fileName: outFileName, width, height, _fileType, timeout} = props;
+    const {file: outFile, fileName: outFileName, height, _fileType, timeout} = props;
     const [data, setData] = useState<Record<string, any[]>>({});
     const [file, setFile] = useState<File>();
     const [fileArrayBuffer, setFileArrayBuffer] = useState<ArrayBuffer>(); // ArrayBuffer类型的文件
@@ -97,7 +97,7 @@ export default function XlsxViewer(props: {file: any; fileName?: string; width?:
     }, [file]);
 
     return (
-        <div className={styles['wbSheets_wrapper']} id='wbSheets_wrapper_id' style={{width: width || '100%', height: height || document.body.offsetHeight - 45 + 'px', overflow: 'hidden'}}>
+        <div className={styles['wbSheets_wrapper']} id='wbSheets_wrapper_id'>
             <Loading showLoading={showLoading} />
             <ErrorLine errorInfo={errorInfo} showError={showError} onShowError={onShowError} />
             <TitleWithDownload disabled={!fileArrayBuffer} fileName={fileName} handleDownload={handleDownload} />
