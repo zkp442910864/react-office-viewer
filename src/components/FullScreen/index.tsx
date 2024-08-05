@@ -16,6 +16,8 @@ const FullScreen: FC<IFullScreenProps> = ({
         cssText: '',
         bodyCssText: '',
         animation: 0.5,
+        offsetTop: 0,
+        zIndex: 99999,
     });
 
     const toggle = () => {
@@ -34,6 +36,7 @@ const FullScreen: FC<IFullScreenProps> = ({
             contentDom!.style.height = '100vh';
             contentDom!.style.top = '0';
             contentDom!.style.left = '0';
+            contentDom!.style.zIndex = cache.zIndex + '';
         }
 
         cache.isFull = !isFull;
@@ -52,6 +55,7 @@ const FullScreen: FC<IFullScreenProps> = ({
         cache.cssText = contentDom!.style.cssText;
         cache.width = contentDom.offsetWidth;
         cache.height = contentDom.offsetHeight;
+        cache.offsetTop = contentDom.offsetTop;
         update({});
     }, []);
 
@@ -61,7 +65,12 @@ const FullScreen: FC<IFullScreenProps> = ({
             {children}
             <div
                 className={styles['btn']}
-                style={{'--prev-height': '-' + (cache.isFull ? (cache.height) : (cache.height - 30)) + 'px'} as any}
+                // style={{'--prev-height': '-' + (cache.isFull ? (cache.height) : (cache.height - 30)) + 'px'} as any}
+                style={{
+                    top: cache.isFull ? 50 : cache.offsetTop + 50,
+                    position: cache.isFull ? 'fixed' : 'absolute',
+                    zIndex: cache.isFull ? (cache.zIndex + 1) : '',
+                }}
                 title="全屏"
                 onClick={toggle}
             >{cache.isFull ? '退出' : '全屏'}
