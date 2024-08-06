@@ -25,12 +25,15 @@ const FullScreen: FC<IFullScreenProps> = ({
         const {contentDom, width, height, isFull} = cache;
 
         if (isFull) {
+            // 退出
             contentDom!.style.cssText = cache.cssText;
+            contentDom!.style.pointerEvents = 'none';
             setTimeout(() => {
                 document.body.style.cssText = cache.bodyCssText;
             }, cache.animation * 1000);
         }
         else {
+            // 全屏
             document.body.style.cssText = 'overflow:hidden';
             contentDom!.style.position = 'fixed';
             contentDom!.style.width = '100vw';
@@ -53,7 +56,6 @@ const FullScreen: FC<IFullScreenProps> = ({
         const contentDom = dom.nextElementSibling as HTMLDivElement;
 
         contentDom!.style.transition = `${cache.animation}s`;
-        contentDom!.style.pointerEvents = 'none';
 
         cache.bodyCssText = document.body.style.cssText;
         cache.contentDom = contentDom;
@@ -61,6 +63,9 @@ const FullScreen: FC<IFullScreenProps> = ({
         cache.width = contentDom.offsetWidth;
         cache.height = contentDom.offsetHeight;
         cache.offsetTop = contentDom.offsetTop;
+
+        // 这一步要放最后，
+        contentDom!.style.pointerEvents = 'none';
         update({});
     }, []);
 
