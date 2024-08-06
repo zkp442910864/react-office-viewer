@@ -6,6 +6,7 @@ import {getFileTypeFromUploadType, isMediaSource} from '../../utils/utils';
 import FullScreen from '../FullScreen';
 
 const Viewer: FC<IViewerProps> = ({
+    openFullScreen = true,
     fileSource,
     height,
     width,
@@ -79,7 +80,7 @@ const Viewer: FC<IViewerProps> = ({
 
 
     return (
-        <FullScreen>
+        <FullScreen open={openFullScreen}>
             <div className={state.loading ? styles['loading'] : ''} style={{width: width || '100%', height: height || document.body.offsetHeight - 45 + 'px'}}>
                 {/* <DocxViewer file={state.file} height="500px" />
                         <XlsxViewer file={state.file} height="500px" />
@@ -118,4 +119,6 @@ interface IViewerProps {
     fileName?: string;
     width?: string;
     height?: string;
+    /** 开启全屏功能 */
+    openFullScreen?: boolean | true;
 }
