@@ -27,9 +27,9 @@ const FullScreen: FC<IFullScreenProps> = ({
         if (isFull) {
             // 退出
             contentDom!.style.cssText = cache.cssText;
-            contentDom!.style.pointerEvents = 'none';
             setTimeout(() => {
                 document.body.style.cssText = cache.bodyCssText;
+                contentDom!.style.pointerEvents = 'none';
             }, cache.animation * 1000);
         }
         else {
@@ -41,6 +41,7 @@ const FullScreen: FC<IFullScreenProps> = ({
             contentDom!.style.top = '0';
             contentDom!.style.left = '0';
             contentDom!.style.zIndex = cache.zIndex + '';
+            contentDom!.style.pointerEvents = 'initial';
         }
 
         cache.isFull = !isFull;
