@@ -7,6 +7,7 @@ import styles from './index.module.less';
 
 const ImageOrAudioOrVideoViewer: FC<IImageOrAudioOrVideoViewerProps> = ({
     file,
+    type,
     fileName,
 }) => {
 
@@ -45,13 +46,13 @@ const ImageOrAudioOrVideoViewer: FC<IImageOrAudioOrVideoViewerProps> = ({
                     <TransformComponent contentStyle={{width: '100%', height: '100%'}} wrapperStyle={{width: '100%', height: '100%'}}>
                         {(() => {
 
-                            if (state.type === 'image') {
+                            if (type === 'image' || state.type === 'image') {
                                 return <img className={styles['pg-viewer-item']} loading="lazy" src={state.url} />;
                             }
-                            if (state.type === 'video') {
+                            if (type === 'video' || state.type === 'video') {
                                 return <video className={styles['pg-viewer-item']} controls={true} src={state.url} />;
                             }
-                            if (state.type === 'audio') {
+                            if (type === 'audio' || state.type === 'audio') {
                                 return <audio className={styles['pg-viewer-item']} controls={true} src={state.url} />;
                             }
 
@@ -71,4 +72,6 @@ export default ImageOrAudioOrVideoViewer;
 interface IImageOrAudioOrVideoViewerProps {
     file?: File | null;
     fileName?: string;
+    /** 强制文件类型 */
+    type: 'image' | 'video' | 'audio',
 }

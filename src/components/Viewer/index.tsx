@@ -11,6 +11,7 @@ const Viewer: FC<IViewerProps> = ({
     height,
     width,
     fileName,
+    type,
 }) => {
 
     const Com = useRef<FC<any>>();
@@ -25,22 +26,22 @@ const Viewer: FC<IViewerProps> = ({
         const mediaSource = isMediaSource(type);
         const textFileSource = getFileTypeFromUploadType(type);
 
-        if (mediaSource) {
+        if (['image', 'video', 'audio'].includes(type) || mediaSource) {
             Com.current = (await import(/* webpackChunkName: "ImageOrAudioOrVideoViewer" */'../ImageOrAudioOrVideoViewer')).default;
         }
-        else if (textFileSource === 'pdf') {
+        else if (['pdf'].includes(type) || textFileSource === 'pdf') {
             Com.current = (await import(/* webpackChunkName: "PdfViewer" */'../PdfViewer')).default;
         }
-        else if (['xls', 'xlsx'].includes(textFileSource)) {
+        else if (['xls', 'xlsx'].includes(type) || ['xls', 'xlsx'].includes(textFileSource)) {
             Com.current = (await import(/* webpackChunkName: "SheetViewer" */'../SheetViewer')).default;
         }
-        else if (textFileSource === 'docx') {
+        else if (['docx'].includes(type) || textFileSource === 'docx') {
             Com.current = (await import(/* webpackChunkName: "DocxViewer" */'../DocxViewer')).default;
         }
-        else if (['ppt', 'pptx'].includes(textFileSource)) {
+        else if (['ppt'].includes(type) || ['ppt', 'pptx'].includes(textFileSource)) {
             Com.current = (await import(/* webpackChunkName: "PptViewer" */'../PptViewer')).default;
         }
-        else if (type === '' || ['json', ''].includes(textFileSource)) {
+        else if (['txt', 'json'].includes(type) || type === '' || ['json', ''].includes(textFileSource)) {
             Com.current = (await import(/* webpackChunkName: "TxtViewer" */'../TxtViewer')).default;
         }
         else {
@@ -95,6 +96,7 @@ const Viewer: FC<IViewerProps> = ({
                                 file={state.file}
                                 fileName={fileName}
                                 height={height}
+                                type={type}
                                 width={width}
                             />
                         )
@@ -121,4 +123,6 @@ interface IViewerProps {
     height?: string;
     /** 开启全屏功能 */
     openFullScreen?: boolean | true;
+    /** 强制文件类型 */
+    type: 'image' | 'video' | 'audio' | 'pdf' | 'docx' | 'ppt' | 'json' | 'txt' | 'xls' | 'xlsx',
 }
