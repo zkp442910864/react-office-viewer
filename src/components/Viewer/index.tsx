@@ -11,7 +11,7 @@ const Viewer: FC<IViewerProps> = ({
     height,
     width,
     fileName,
-    type,
+    type: propType,
 }) => {
 
     const Com = useRef<FC<any>>();
@@ -26,22 +26,22 @@ const Viewer: FC<IViewerProps> = ({
         const mediaSource = isMediaSource(type);
         const textFileSource = getFileTypeFromUploadType(type);
 
-        if (['image', 'video', 'audio'].includes(type) || mediaSource) {
+        if (['image', 'video', 'audio'].includes(propType) || mediaSource) {
             Com.current = (await import(/* webpackChunkName: "ImageOrAudioOrVideoViewer" */'../ImageOrAudioOrVideoViewer')).default;
         }
-        else if (['pdf'].includes(type) || textFileSource === 'pdf') {
+        else if (['pdf'].includes(propType) || textFileSource === 'pdf') {
             Com.current = (await import(/* webpackChunkName: "PdfViewer" */'../PdfViewer')).default;
         }
-        else if (['xls', 'xlsx'].includes(type) || ['xls', 'xlsx'].includes(textFileSource)) {
+        else if (['xls', 'xlsx'].includes(propType) || ['xls', 'xlsx'].includes(textFileSource)) {
             Com.current = (await import(/* webpackChunkName: "SheetViewer" */'../SheetViewer')).default;
         }
-        else if (['docx'].includes(type) || textFileSource === 'docx') {
+        else if (['docx'].includes(propType) || textFileSource === 'docx') {
             Com.current = (await import(/* webpackChunkName: "DocxViewer" */'../DocxViewer')).default;
         }
-        else if (['ppt'].includes(type) || ['ppt', 'pptx'].includes(textFileSource)) {
+        else if (['ppt'].includes(propType) || ['ppt', 'pptx'].includes(textFileSource)) {
             Com.current = (await import(/* webpackChunkName: "PptViewer" */'../PptViewer')).default;
         }
-        else if (['txt', 'json'].includes(type) || type === '' || ['json', ''].includes(textFileSource)) {
+        else if (['txt', 'json'].includes(propType) || type === '' || ['json', ''].includes(textFileSource)) {
             Com.current = (await import(/* webpackChunkName: "TxtViewer" */'../TxtViewer')).default;
         }
         else {
@@ -96,7 +96,7 @@ const Viewer: FC<IViewerProps> = ({
                                 file={state.file}
                                 fileName={fileName}
                                 height={height}
-                                type={type}
+                                type={propType}
                                 width={width}
                             />
                         )

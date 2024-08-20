@@ -42,9 +42,9 @@ module.exports = (env, argv, config) => {
             new webpack.BannerPlugin({
                 banner: `
                     ReactUtilLib
-                    (c) ${new Date().getFullYear()} zkp
+                    (c) ${new Date().getFullYear()} ${new Date().getMonth() + 1} ${new Date().getDate()} zkp
                     Project Home:
-                        https://github.com/hizzgdev/jsmind/
+                        https://github.com/zkp442910864/react-utils
                     Released under the MIT License.
                 `,
                 // raw: true, // 直接输出，不做任何转换
