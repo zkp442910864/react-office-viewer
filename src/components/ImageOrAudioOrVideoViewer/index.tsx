@@ -21,15 +21,22 @@ const ImageOrAudioOrVideoViewer: FC<IImageOrAudioOrVideoViewerProps> = ({
 
 
     useEffect(() => {
-        const matchData = isMediaSource(file?.type || '');
+        if (typeof file === 'string') {
+            state.url = file;
+            update({});
+        }
+        else {
+            const matchData = isMediaSource(file?.type || '');
 
-        if (!file || !matchData) {
-            return;
+            if (!file || !matchData) {
+                return;
+            }
+
+            state.url = _getObjectUrl(file);
+            state.type = matchData.type;
+            update({});
         }
 
-        state.url = _getObjectUrl(file);
-        state.type = matchData.type;
-        update({});
 
     }, [file]);
 
@@ -37,9 +44,17 @@ const ImageOrAudioOrVideoViewer: FC<IImageOrAudioOrVideoViewerProps> = ({
         <div className={styles['pg-viewer-wrapper']}>
             <TitleWithDownload
                 backgroundColor="gray"
-                file={file}
-                fileName={fileName ?? file?.name}
-                fileType={file?.type}
+                {...(
+                    typeof file === 'string'
+                        ? {
+                            fileName: fileName,
+                        }
+                        : {
+                            file,
+                            fileName: fileName ?? file?.name,
+                            fileType: file?.type,
+                        }
+                )}
             />
             <div className={styles['pg-viewer-content']}>
                 <TransformWrapper>
@@ -56,7 +71,6 @@ const ImageOrAudioOrVideoViewer: FC<IImageOrAudioOrVideoViewerProps> = ({
                                 return <audio className={styles['pg-viewer-item']} controls={true} src={state.url} />;
                             }
 
-                            // return state.error;
                         })()}
                     </TransformComponent>
                 </TransformWrapper>
@@ -70,7 +84,7 @@ export default ImageOrAudioOrVideoViewer;
 
 
 interface IImageOrAudioOrVideoViewerProps {
-    file?: File | null;
+    file?: File | string | null;
     fileName?: string;
     /** 强制文件类型 */
     type: 'image' | 'video' | 'audio',

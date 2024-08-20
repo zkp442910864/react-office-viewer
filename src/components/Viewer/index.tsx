@@ -19,29 +19,29 @@ const Viewer: FC<IViewerProps> = ({
     const {current: state} = useRef({
         loading: false,
         error: '',
-        file: null as null | File,
+        file: null as null | File | string,
     });
 
     const getComponent = async (type: string, name: string) => {
         const mediaSource = isMediaSource(type);
         const textFileSource = getFileTypeFromUploadType(type);
 
-        if (['image', 'video', 'audio'].includes(propType) || mediaSource) {
+        if (['image', 'video', 'audio'].includes(type) || mediaSource) {
             Com.current = (await import(/* webpackChunkName: "ImageOrAudioOrVideoViewer" */'../ImageOrAudioOrVideoViewer')).default;
         }
-        else if (['pdf'].includes(propType) || textFileSource === 'pdf') {
+        else if (['pdf'].includes(type) || textFileSource === 'pdf') {
             Com.current = (await import(/* webpackChunkName: "PdfViewer" */'../PdfViewer')).default;
         }
-        else if (['xls', 'xlsx'].includes(propType) || ['xls', 'xlsx'].includes(textFileSource)) {
+        else if (['xls', 'xlsx'].includes(type) || ['xls', 'xlsx'].includes(textFileSource)) {
             Com.current = (await import(/* webpackChunkName: "SheetViewer" */'../SheetViewer')).default;
         }
-        else if (['docx'].includes(propType) || textFileSource === 'docx') {
+        else if (['docx'].includes(type) || textFileSource === 'docx') {
             Com.current = (await import(/* webpackChunkName: "DocxViewer" */'../DocxViewer')).default;
         }
-        else if (['ppt'].includes(propType) || ['ppt', 'pptx'].includes(textFileSource)) {
+        else if (['ppt'].includes(type) || ['ppt', 'pptx'].includes(textFileSource)) {
             Com.current = (await import(/* webpackChunkName: "PptViewer" */'../PptViewer')).default;
         }
-        else if (['txt', 'json'].includes(propType) || type === '' || ['json', ''].includes(textFileSource)) {
+        else if (['txt', 'json'].includes(type) || type === '' || ['json', ''].includes(textFileSource)) {
             Com.current = (await import(/* webpackChunkName: "TxtViewer" */'../TxtViewer')).default;
         }
         else {
@@ -52,14 +52,25 @@ const Viewer: FC<IViewerProps> = ({
     const getData = async () => {
         if (!fileSource) return;
 
-        const fn = typeof fileSource === 'function' ? fileSource : (() => Promise.resolve(fileSource));
         state.loading = true;
         update({});
 
         try {
-            const file = await fn();
-            await getComponent(file.type, file.name);
-            state.file = file;
+            if (typeof fileSource === 'string') {
+                if (propType && ['image', 'video', 'audio'].includes(propType)) {
+                    await getComponent(propType, fileName || '');
+                }
+                else {
+                    await getComponent('other', fileName || '');
+                }
+                state.file = fileSource;
+            }
+            else {
+                const fn = typeof fileSource === 'function' ? fileSource : (() => Promise.resolve(fileSource));
+                const file = await fn();
+                await getComponent(propType ?? file.type, file.name);
+                state.file = file;
+            }
         } catch (error) {
             console.error(error);
         }
@@ -117,7 +128,8 @@ export const viewerFn = (dom: string | HTMLDivElement, props: IViewerProps) => {
 export default Viewer;
 
 interface IViewerProps {
-    fileSource?: File | (() => Promise<File>) | null;
+    /** 传字符串时候(只支持'image' | 'video' | 'audio'三种)，必须是一个链接，且必须要有 type类型 */
+    fileSource?: File | (() => Promise<File>) | string | null;
     fileName?: string;
     width?: string;
     height?: string;
