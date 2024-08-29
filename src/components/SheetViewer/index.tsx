@@ -1,15 +1,18 @@
-import React, {useEffect, useState, useRef} from 'react';
+import React, {useEffect, useState, useRef, useLayoutEffect} from 'react';
 import * as XLSX from 'xlsx';
 import {HotTable} from '@handsontable/react';
 import 'handsontable/dist/handsontable.full.css';
+import {MergeCells, registerPlugin} from 'handsontable/plugins';
 
 import styles from './style.module.less';
 import {Loading, TitleWithDownload, ErrorLine} from '../pageComps';
 import {_getBlobUrlFromBuffer, _download} from '../../utils/utils';
 
+registerPlugin(MergeCells);
 export default function XlsxViewer(props: {file: any; fileName?: string; width?: string; height?: string; _fileType?: any; timeout?: number;}) {
     const {file: outFile, fileName: outFileName, height, _fileType, timeout} = props;
     const [data, setData] = useState<Record<string, any[]>>({});
+    const [mergeData, setMergeData] = useState<Record<string, any[]>>({});
     const [file, setFile] = useState<File>();
     const [fileArrayBuffer, setFileArrayBuffer] = useState<ArrayBuffer>(); // ArrayBuffer类型的文件
     const [fileName, setFileName] = useState('');
@@ -33,13 +36,31 @@ export default function XlsxViewer(props: {file: any; fileName?: string; width?:
             setSheetNames(sheetNames);
             setActiveTabKey('wbSheets_0');
         }
+
         sheetNames.forEach(function (sheetName, idx) {
             const subDivId = 'wbSheets_' + idx;
-            const json = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], {header: 'A', blankrows: false});
+            const data = workbook.Sheets[sheetName];
+            const merges = data['!merges'] || [];
+            const json = XLSX.utils.sheet_to_json(data, {header: 'A', blankrows: true, defval: ''});
+            const mergeCells = merges.reduce((arr, item) => {
+                const {s: {c: startCol, r: startRow}, e: {c: endCol, r: endRow}} = item;
+                const hasVal = (endCol || endRow) > 0;
+                arr.push({col: startCol, row: startRow, colspan: hasVal ? (endCol - startCol + 1) : endCol, rowspan: hasVal ? (endRow - startRow + 1) : endRow});
+                return arr;
+            }, [] as any);
+
+            // console.log(merges, json, mergeCells);
+
             setData(data => {
                 return {
                     ...data,
                     [subDivId]: json,
+                };
+            });
+            setMergeData(data => {
+                return {
+                    ...data,
+                    [subDivId]: mergeCells,
                 };
             });
         });
@@ -80,7 +101,7 @@ export default function XlsxViewer(props: {file: any; fileName?: string; width?:
                     const data = e.target!.result;
                     setFileArrayBuffer(data as ArrayBuffer);
                     const workbook = XLSX.read(data, {type: 'array'});
-                    // console.log('workbook', workbook)
+                    // console.log('workbook', workbook);
                     loadData(workbook);
                 };
 
@@ -105,12 +126,19 @@ export default function XlsxViewer(props: {file: any; fileName?: string; width?:
                 colHeaders={true}
                 data={data[activeTabKey] || []}
                 height={`calc(${height} - 25px - 38px)`}
-                // height={height || document.body.offsetHeight - 45 + 'px'}
                 licenseKey="non-commercial-and-evaluation"
+                // mergeCells={[
+                //     // {col: 0, row: 0, colspan: 5, rowspan: 1},
+                //     {col: 0, row: 0, colspan: 5, rowspan: 1},
+                //     {col: 0, row: 2, colspan: 1, rowspan: 99},
+                //     // {col: 0, row: 0, colspan: 5, rowspan: 0}
+                //     // {row: 1, col: 1, rowspan: 3, colspan: 3},
+                // ]}
+                mergeCells={mergeData[activeTabKey] || []}
                 readOnly={true}
                 rowHeaders={true}
                 settings={{
-                // columns: [{editor: false}],
+                    // columns: [{editor: false}],
                     fixedColumnsLeft: 0,
                     fixedRowsTop: 0,
                     stretchH: 'none',
